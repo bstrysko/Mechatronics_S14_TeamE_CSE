@@ -10,6 +10,9 @@ class I2CBus
   public:
     I2CBus(uint8_t busNumber);
     ~I2CBus();
+
+    size_t read(uint8_t address, uint8_t register, uint8_t* buf, size_t buf_size);
+    size_t write(uint8_t address, uint8_t register, uint8_t* buf, size_t buf_size);
 };
 
 #endif

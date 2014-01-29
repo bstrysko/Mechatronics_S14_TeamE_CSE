@@ -1,19 +1,26 @@
 #ifndef _EXPLORARE_EXPLORER_H_
 #define _EXPLORARE_EXPLORER_H_
 
-#include "color.h"
+#include "drive_system.h"
 #include "rgb_sensor.h"
-#include "drive_controller.h"
-#include "kinect.h"
+#include "camera.h"
+
+#define I2C_BUS_NUMBER 1
+#define DRIVE_SYSTEM_ADDRESS 0x0
+#define RGB_SENSOR_ADDRESS 0x0
 
 class Explorer
 {
+  private:
+    static I2CBus* i2cBus;
+    static DriveSystem* driveSystem;
+    static RGBSensor* rgbSensor;
+    static Camera* camera;
   public:
-    static bool init(Color defectColor);
-
-    static RGBSensor getRGBSensor();
-    static DriveController getDriveController();
-    static Kinect getKinect();
+    static void init();
+    static DriveSystem* getDriveSystem();
+    static RGBSensor* getRGBSensor();
+    static Camera* getCamera();
 };
 
 #endif
