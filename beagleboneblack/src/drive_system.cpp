@@ -27,28 +27,34 @@ DriveSystem::~DriveSystem()
 
 void DriveSystem::getPosition(float* x, float* y)
 {
-	uint8_t buffer[2];
-	i2cRead(DRIVE_SYSTEM_REGISTER_POSITION, buffer, 2);
-
-	(*x) = (float)buffer[0];
-	(*y) = (float)buffer[1];
+//	uint8_t buffer[2];
+//	i2cRead(DRIVE_SYSTEM_REGISTER_POSITION, buffer, 2);
+//	(*x) = (float)buffer[0];
+//	(*y) = (float)buffer[1];
+	float buffer[2];
+	i2cRead(DRIVE_SYSTEM_REGISTER_POSITION, (uint8_t*)buffer, 8);
+	(*x) = buffer[0];
+	(*y) = buffer[1];
 }
 
 float DriveSystem::getAngle()
 {
-	uint8_t v;
-
-	i2cRead(DRIVE_SYSTEM_REGISTER_ANGLE, &v, 1);
-
-	return (float)v;
+//	uint8_t v;
+//	i2cRead(DRIVE_SYSTEM_REGISTER_ANGLE, &v, 1);
+//	return (float)v;
+	float v;
+	i2cRead(DRIVE_SYSTEM_REGISTER_ANGLE, (uint8_t*)&v, 4);
+	return v;
 }
 
 void DriveSystem::setPosition(float x, float y)
 {
-	uint8_t buffer[2];
-
-	buffer[0] = (uint8_t)x;
-	buffer[1] = (uint8_t)y;
-
-	i2cWrite(DRIVE_SYSTEM_REGISTER_POSITION, buffer, 2);
+//	uint8_t buffer[2];
+//	buffer[0] = (uint8_t)x;
+//	buffer[1] = (uint8_t)y;
+//	i2cWrite(DRIVE_SYSTEM_REGISTER_POSITION, buffer, 2);
+	float buffer[2];
+	buffer[0] = x;
+	buffer[1] = y;
+	i2cWrite(DRIVE_SYSTEM_REGISTER_POSITION, (uint8_t*)buffer, 8);
 }

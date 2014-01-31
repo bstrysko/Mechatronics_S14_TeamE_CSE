@@ -21,13 +21,13 @@ Camera::Camera()
 {
 	camera.open(0);
 
-	camera.set(CV_CAP_PROP_FRAME_WIDTH, 160 /*320*/);
-    camera.set(CV_CAP_PROP_FRAME_HEIGHT, 120 /*240*/);
+	camera.set(CV_CAP_PROP_FRAME_WIDTH, 320);
+    camera.set(CV_CAP_PROP_FRAME_HEIGHT, 240);
 }
 
 Camera::~Camera()
 {
-
+	camera.release();
 }
 
 RGBFrame Camera::getRGBFrame()

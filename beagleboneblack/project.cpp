@@ -35,7 +35,7 @@ Project::Project() : Application()
 
 void Project::setup()
 {
-	setDelay(10);
+//	setDelay(10);
 
 	Explorer::init();
 
@@ -52,11 +52,6 @@ void Project::setup()
 
 void Project::loop()
 {
-	float x2, y2, angle2;
-	driveSystem->getPosition(&x2, &y2);
-	cout << "Actual: " << x2 << ", " << y2 << " | " << angle2 << endl;
-	cout << "Target: " << x << ", " << y << endl << endl;
-
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
 	HSVFrame hsv_frame(rgb_frame);
@@ -67,29 +62,23 @@ void Project::loop()
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
 	text_frame.printText(Point(20,40), Color::GREEN, 0, t);
 	t.str("");
-/*	
-	vector<RGBColorSensor> data = rgbColorSensorArray->getData();
+	
+	vector<Color> data = rgbColorSensorArray->getData();
 
 	for(size_t i = 0; i < data.size(); i++)
 	{
-		RGBColorSensor s = data[i];
-		Color c = s.getColor();
+		Color c = data[i];
 
 		ostringstream t;
-		t << (s.isDefect() ? "DEFECT" : "NON-DEFECT");
+		t << ((c.getAlpha() > 3000) ? "DEFECT" : "NON-DEFECT");
 		text_frame.printText(Point(20, 60 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
 		t.str("");
-
-	//	cout << s << "\t";
 	}
-
-	//cout << endl;
-*/
 
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
 
-#define STEP 10.0
+#define STEP 4.0
 
 void Project::keyPressed(char key)
 {
