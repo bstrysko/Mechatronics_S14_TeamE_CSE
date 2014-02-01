@@ -77,9 +77,9 @@ void Project::loop()
 	if(((int)x2 == x) && ((int)y2 == y) && (!here))
 	{
 		here = true;
-		client->detectCell(CSECellCoordinate(x, y), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
-		client->detectCell(CSECellCoordinate(x, y+1), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
-		client->detectCell(CSECellCoordinate(x, y+2), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
+		client->detectCell(CSECellCoordinate(-y, x), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
+		client->detectCell(CSECellCoordinate((-y+1), x), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
+		client->detectCell(CSECellCoordinate((-y+2), x), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
 	
 		cout << (*client) << endl;
 		client->flush();
