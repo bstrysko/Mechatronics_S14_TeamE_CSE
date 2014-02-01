@@ -42,10 +42,17 @@ void DriveSystem::setServoPos(uint8_t pos)
 	i2c_write(REGISTER_SERVO, &pos, 1);
 }
 
-void DriveSystem::moveStepper(bool forward, uint8_t degrees)
+void DriveSystem::moveStepper(int16_t degrees)
 {
-	uint8_t d = forward ? 0x80 : 0x0;
-	uint8_t v = d | degrees;
-	i2c_write(REGISTER_STEPPER_MOTOR, &v, 1);
+	i2c_write(REGISTER_STEPPER_MOTOR, (uint8_t*)(&degrees), 2);
+}
+
+void DriveSystem::setDCMotor(bool continuous, int16_t degrees)
+{
+	uint8_t buf[3];
+	buf[0] = (continuous) ? 0x1 : 0x0;
+	buf[1] = (int8_t)((degrees) >> 8);
+	buf[2] = ((int8_t)(degrees));
+	i2c_write(REGISTER_DC_MOTOR, buf, 3);
 }
 

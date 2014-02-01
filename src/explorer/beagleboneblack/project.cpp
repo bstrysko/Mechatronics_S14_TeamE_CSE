@@ -3,7 +3,10 @@
 Window* w1;
 Camera* camera;
 DriveSystem* driveSystem;
-bool stepperForward;
+bool motorForward;
+bool motorFreeRun;
+int16_t motorSpeed;
+int16_t stepperNumSteps;
 
 void slider_servo_callback(int v, void*)
 {
@@ -12,16 +15,14 @@ void slider_servo_callback(int v, void*)
 
 void slider_dc_motor_callback(int v, void*)
 {
+	motorSpeed = (int16_t)v;	
 }
 
 void slider_stepper_motor_callback(int v, void*)
 {
-	driveSystem->moveStepper(stepperForward, (uint8_t)v);
+	stepperNumSteps = (int16_t)v;
 }
 
-//	I2CBus i2cBus(1);
-//	I2CDevice d(&i2cBus, 0x29);
-//	I2CDevice d(&i2cBus, 0x12);
 
 Project::Project() : Application()
 {
@@ -34,12 +35,15 @@ void Project::setup()
 
 	driveSystem = Explorer::getDriveSystem();
 
-	stepperForward = true;
+	motorForward = true;
+	motorFreeRun = false;
+	motorSpeed = 0;
+	stepperNumSteps = 0;
 
 	w1 = createWindow("Motor Lab");
 	w1->createSlider("Servo Position", 180, slider_servo_callback);
-	w1->createSlider("DC Motor Rotation/Speed", 100, slider_dc_motor_callback);
-	w1->createSlider("Stepper Motor Degrees", 90, slider_stepper_motor_callback);
+	w1->createSlider("DC Motor Rotation(D)/Speed(DPS)", 270, slider_dc_motor_callback);
+	w1->createSlider("Stepper Motor Degrees", 720, slider_stepper_motor_callback);
 
 	setDelay(100);
 }
@@ -74,10 +78,17 @@ void Project::loop()
 	text_frame.printText(Point(20,160), Color::GREEN, t);
 	t.str("");
 
-    t << "Stepper Forward: " << (stepperForward ? "true" : "false");
+    t << "Motor Forward: " << (motorForward ? "true" : "false");
 	text_frame.printText(Point(20,180), Color::GREEN, t);
 	t.str("");
 
+    t << "DC Free Run: " << (motorFreeRun ? "true" : "false");
+	text_frame.printText(Point(20,200), Color::GREEN, t);
+	t.str("");
+
+    t << "DC Speed: " << (int)(motorSpeed);
+	text_frame.printText(Point(20,220), Color::GREEN, t);
+	t.str("");
 
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
@@ -86,10 +97,30 @@ void Project::keyPressed(char key)
 {
 	if(key == 't')
 	{
-		stepperForward = !stepperForward;
+		motorForward = !motorForward;
+		motorSpeed = motorForward ? abs(motorSpeed) : -abs(motorSpeed);
+		stepperNumSteps = motorForward ? abs(stepperNumSteps) : -abs(stepperNumSteps);
 	}
 	else if(key == 'b')
 	{
-		stepperForward = driveSystem->getIRSensor();
+		motorForward = driveSystem->getIRSensor();
+		motorSpeed = motorForward ? abs(motorSpeed) : -abs(motorSpeed);
+		stepperNumSteps = motorForward ? abs(stepperNumSteps) : -abs(stepperNumSteps);
+	}
+	else if(key == 's')
+	{
+		driveSystem->moveStepper(stepperNumSteps);
+	}
+	else if(key == 'f')
+	{
+		motorFreeRun = !motorFreeRun;
+	}
+	else if(key == 'm')
+	{
+		driveSystem->setDCMotor(motorFreeRun, motorSpeed);
+	}
+	else if(key == 'z')
+	{
+		driveSystem->setDCMotor(false, 0);
 	}
 }

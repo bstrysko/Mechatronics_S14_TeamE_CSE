@@ -26,7 +26,9 @@ class DriveSystem : I2CDevice
     uint8_t getServoPos();
     void setServoPos(uint8_t pos);
 
-    void moveStepper(bool forward, uint8_t degrees);
+    void moveStepper(int16_t degrees);
+
+    void setDCMotor(bool continuous, int16_t degrees);
 
     //uint64_t getDistanceTraveled();
     //TODO: get orientation
