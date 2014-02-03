@@ -13,19 +13,12 @@ Camera::~Camera()
 
 }
 
-Frame Camera::getFrame()
+RGBFrame Camera::getRGBFrame()
 {
 	Mat frame;
 
 	camera >> frame;
 
-	if(!frame.data)
-	{
-		//TODO: change
-		return frame;
-	}
-	else
-	{
-		return frame;
-	}
+	//TODO: check if frame is empty
+	return RGBFrame(frame);
 }

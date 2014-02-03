@@ -1,5 +1,7 @@
 #include <explorer.h>
 #include <camera.h>
+#include <frame/rgb_frame.h>
+#include <frame/hsv_frame.h>
 
 #include <opencv2/opencv.hpp>
 
@@ -18,9 +20,9 @@ int main()
 
 	while(true)
 	{
-		Frame frame = camera->getFrame();
+		RGBFrame rgb_frame = camera->getRGBFrame();
 		
-		Mat f = frame.getMat();
+		Mat f = rgb_frame.getMat();
 
 		if(!f.data)
 		{
@@ -36,10 +38,10 @@ int main()
         Point textOrg(20, 20);
         putText(f, text, textOrg, fontFace, 0.8, Scalar(0,250,0), 1, CV_AA);
 
-		Frame hsv = frame.toHSVFrame();
+		HSVFrame hsv_frame(rgb_frame);
 
         imshow("video", f);
-		imshow("hsv", hsv.getMat());
+		imshow("hsv", hsv_frame.getMat());
 
 		if(waitKey(50) >= 0)
 		{

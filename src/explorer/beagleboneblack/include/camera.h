@@ -1,7 +1,7 @@
 #ifndef _EXPLORARE_CAMERA_H_
 #define _EXPLORARE_CAMERA_H_
 
-#include "frame.h"
+#include "frame/rgb_frame.h"
 
 #include <opencv2/opencv.hpp>
 
@@ -15,7 +15,7 @@ class Camera
     Camera();
     ~Camera(); 
 
-    Frame getFrame();
+    RGBFrame getRGBFrame();
 };
 
 #endif
