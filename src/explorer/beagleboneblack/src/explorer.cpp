@@ -1,4 +1,9 @@
-#include <explorer.h>
+#include "explorer.h"
+
+I2CBus* Explorer::i2cBus = 0;
+DriveSystem* Explorer::driveSystem = 0;
+RGBSensor* Explorer::rgbSensor = 0;
+Camera* Explorer::camera = 0;
 
 void Explorer::init()
 {

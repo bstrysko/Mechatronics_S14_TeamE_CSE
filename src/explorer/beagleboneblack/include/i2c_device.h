@@ -2,7 +2,8 @@
 #define _EXPLORARE_I2C_DEVICE_H_
 
 #include "i2c_bus.h"
-#include "types.h"
+
+#include <stdint.h>
 
 class I2CDevice
 {

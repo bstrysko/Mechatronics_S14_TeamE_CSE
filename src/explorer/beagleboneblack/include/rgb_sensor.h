@@ -5,6 +5,8 @@
 #include "i2c_bus.h"
 #include "color.h"
 
+#include <stdint.h>
+
 class RGBSensor : I2CDevice
 {
   private:
@@ -12,11 +14,11 @@ class RGBSensor : I2CDevice
     RGBSensor(I2CBus* bus, uint8_t address);
     ~RGBSensor();
 
-    uint8_t getID();
-    uint8_t getGain();
-    Color getColor();
+    //uint8_t getID();
+    //uint8_t getGain();
+    //Color getColor();
 
-    void setGain(uint8_t gain);
+    //void setGain(uint8_t gain);
 };
 
 #endif

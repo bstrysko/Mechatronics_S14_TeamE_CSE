@@ -3,7 +3,8 @@
 
 #include "i2c_device.h"
 #include "i2c_bus.h"
-#include "types.h"
+
+#include <stdint.h>
 
 class DriveSystem : I2CDevice
 {
@@ -12,12 +13,12 @@ class DriveSystem : I2CDevice
     DriveSystem(I2CBus* bus, uint8_t address);
     ~DriveSystem();
 
-    uint64_t getDistanceTraveled();
+    //uint64_t getDistanceTraveled();
     //TODO: get orientation
 
     //TODO: figure out units of measurement
-    void driveForward(uint8_t cm);
-    void turn(short degrees);
+    //void driveForward(uint8_t cm);
+    //void turn(short degrees);
 };
 
 #endif

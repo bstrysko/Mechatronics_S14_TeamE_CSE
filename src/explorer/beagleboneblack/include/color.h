@@ -1,21 +1,21 @@
 #ifndef _EXPLORARE_COLOR_H_
 #define _EXPLORARE_COLOR_H_
 
-#include "types.h"
+#include <stdint.h>
 
 class Color
 {
   private:
-    uint8_t alpha, red, green, blue;
+    uint8_t red, green, blue, alpha;
   public:
     Color(uint8_t red, uint8_t green, uint8_t blue);
-    Color(uint8_t alpha, uint8_t red, uint8_t green, uint8_t blue);
+    Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
     ~Color();
 
-    uint8_t getAlpha();
     uint8_t getRed();
     uint8_t getGreen();
     uint8_t getBlue();
+    uint8_t getAlpha();
 };
 
 #endif

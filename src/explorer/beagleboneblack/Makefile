@@ -1,2 +1,2 @@
 all:
-	gcc -I include/ -o main main.cpp src/explorer.cpp
+	g++ -I include/ -o main `find src/*.cpp` main.cpp `pkg-config --cflags --libs opencv`
