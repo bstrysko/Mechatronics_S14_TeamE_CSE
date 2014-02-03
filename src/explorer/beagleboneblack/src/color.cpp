@@ -1,5 +1,9 @@
 #include <color.h>
 
+Color Color::RED = Color(255, 0, 0);
+Color Color::GREEN = Color(0, 255, 0);
+Color Color::BLUE = Color(0, 0, 255);
+
 Color::Color(uint8_t red, uint8_t green, uint8_t blue) : Color(red, green, blue, 0)
 {
 }

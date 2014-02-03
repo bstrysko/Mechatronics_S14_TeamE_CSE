@@ -16,6 +16,10 @@ class Color
     uint8_t getGreen();
     uint8_t getBlue();
     uint8_t getAlpha();
+
+    static Color RED;
+    static Color GREEN;
+    static Color BLUE;
 };
 
 #endif

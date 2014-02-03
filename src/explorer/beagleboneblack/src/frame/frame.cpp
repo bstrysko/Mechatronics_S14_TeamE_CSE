@@ -31,3 +31,10 @@ void Frame::resize(int width, int height)
 	cv::resize(frame, dest, Size(width, height));
 	this->frame = dest;
 }
+
+void Frame::printText(int x, int y, Color color, string text)
+{
+    putText(frame, text, Point(x,y), FONT_HERSHEY_SIMPLEX,
+		0.8, Scalar(color.getRed(),color.getGreen(),color.getBlue(),
+		color.getAlpha()), 1, CV_AA);
+}
