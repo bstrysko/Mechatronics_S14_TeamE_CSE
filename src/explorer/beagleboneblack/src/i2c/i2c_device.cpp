@@ -61,5 +61,21 @@ void I2CDevice::i2c_read(uint8_t reg, uint8_t* buffer, size_t buffer_size)
 
 void I2CDevice::i2c_write(uint8_t reg, uint8_t* buffer, size_t buffer_size)
 {
-	throw ios_base::failure("I2CDevice write currently unimplemented");
+	size_t w_buffer_size = w_buffer_size + 1;
+	uint8_t w_buffer[w_buffer_size];
+
+	w_buffer[0] = reg;
+
+	int i;
+	for(i = 1; i < w_buffer_size; i++)
+	{
+		w_buffer[i] = buffer[i-1];
+	}
+
+	if(write(fd, w_buffer, w_buffer_size) != w_buffer_size)
+	{
+		stringstream o;
+		o << "Cannot write to register " << (int)reg;
+		throw ios_base::failure(o.str());
+	}
 }
