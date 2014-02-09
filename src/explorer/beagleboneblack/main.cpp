@@ -7,11 +7,22 @@
 
 #include <opencv2/opencv.hpp>
 
+#include <i2c/i2c_bus.h>
+#include <i2c/i2c_device.h>
+
 using namespace cv;
 
 int main()
 {
 	Explorer::init();
+
+	I2CBus i2cBus(1);
+	I2CDevice d(&i2cBus, 0x29);
+
+	uint8_t buf[1];
+	d.i2c_read(0x80 | 0x12, buf, 1);
+
+	cout << "RGB Color Sensor ID: " << (int)buf[0] << endl;
 
 	Camera* camera = Explorer::getCamera();
 
