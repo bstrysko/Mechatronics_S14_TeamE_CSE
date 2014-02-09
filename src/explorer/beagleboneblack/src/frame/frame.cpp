@@ -32,9 +32,9 @@ void Frame::resize(int width, int height)
 	this->frame = dest;
 }
 
-void Frame::printText(int x, int y, Color color, string text)
+void Frame::printText(Point point, Color color, string text)
 {
-    putText(frame, text, Point(x,y), FONT_HERSHEY_SIMPLEX,
+    putText(frame, text, point, FONT_HERSHEY_SIMPLEX,
 		0.8, Scalar(color.getRed(),color.getGreen(),color.getBlue(),
 		color.getAlpha()), 1, CV_AA);
 }

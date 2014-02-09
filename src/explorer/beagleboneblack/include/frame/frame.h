@@ -16,8 +16,8 @@ class Frame
     Mat frame;
   protected:
     void create(Mat frame);
-    ~Frame();
   public:
+    ~Frame();
     Mat getMat();
 
     int getWidth();
@@ -25,7 +25,7 @@ class Frame
 
     void resize(int width, int height);
 
-    void printText(int x, int y, Color color, string text);
+    void printText(Point point, Color color, string text);
 };
 
 #endif
