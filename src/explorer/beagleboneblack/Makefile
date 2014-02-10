@@ -1,7 +1,9 @@
 LINK_TARGET = main
 
 OBJS =  \
- main.o \
+ project.o \
+ src/main.o \
+ src/application/application.o \
  src/application/window.o \
  src/camera.o \
  src/color.o \

@@ -27,7 +27,7 @@ class I2CDevice
 
     void setRegister(uint8_t reg);
 
-//  protected:
+//TODO: protected:
   public:
     I2CDevice(I2CBus* bus, uint8_t address);
 
