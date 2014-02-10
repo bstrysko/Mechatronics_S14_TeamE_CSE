@@ -6,7 +6,7 @@
 #include "camera.h"
 
 #define I2C_BUS_NUMBER 1
-#define DRIVE_SYSTEM_ADDRESS 0x0
+#define DRIVE_SYSTEM_ADDRESS 0x12
 #define RGB_SENSOR_ADDRESS 0x0
 
 class Explorer

@@ -6,12 +6,18 @@
 
 #include <stdint.h>
 
+#define SERVO_REGISTER 0x01
+
 class DriveSystem : I2CDevice
 {
   private:
+    uint8_t servo_pos;
   public:
     DriveSystem(I2CBus* bus, uint8_t address);
     ~DriveSystem();
+
+    uint8_t getServoPos();
+    void setServoPos(uint8_t pos);
 
     //uint64_t getDistanceTraveled();
     //TODO: get orientation

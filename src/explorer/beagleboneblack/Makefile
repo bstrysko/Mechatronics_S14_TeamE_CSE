@@ -33,7 +33,7 @@ $(LINK_TARGET) : $(OBJS)
 %.o : %.cpp
 	g++ $(CFLAGS) -g -o $@ -c $< $(LIBS)
 
-#%.dep : %.cpp
-#	g++ -M $(CFLAGS) $< > $@ $(LIBS)
+%.dep : %.cpp
+	g++ -M $(CFLAGS) $< > $@ $(LIBS)
 
-#include $(OBJS:.o=.dep)
+include $(OBJS:.o=.dep)

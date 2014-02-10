@@ -61,10 +61,10 @@ void I2CDevice::i2c_read(uint8_t reg, uint8_t* buffer, size_t buffer_size)
 
 void I2CDevice::i2c_write(uint8_t reg, uint8_t* buffer, size_t buffer_size)
 {
-	size_t w_buffer_size = w_buffer_size + 1;
+	size_t w_buffer_size = buffer_size + 1;
 	uint8_t w_buffer[w_buffer_size];
 
-	w_buffer[0] = reg;
+	w_buffer[0] = 0x80 | reg;
 
 	int i;
 	for(i = 1; i < w_buffer_size; i++)
