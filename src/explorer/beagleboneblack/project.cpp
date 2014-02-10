@@ -1,13 +1,21 @@
 #include "project.h"
 
 Window* w1;
+Camera* camera;
 
-void on_trackbar( int, void* )
+void slider_servo_callback(int v, void*)
 {
-	cout << "Trackbar moved" << endl;
 }
 
-//	Camera* camera = new Camera();
+void slider_dc_motor_callback(int v, void*)
+{
+}
+
+void slider_stepper_motor_callback(int v, void*)
+{
+
+}
+
 //	I2CBus i2cBus(1);
 //	I2CDevice d(&i2cBus, 0x29);
 //	I2CDevice d(&i2cBus, 0x12);
@@ -15,28 +23,9 @@ void on_trackbar( int, void* )
 //	DriveSystem* driveSystem = Explorer::getDriveSystem();
 //	driveSystem->setServoPos(20);
 
-//	Camera* camera = Explorer::getCamera();
 /*
-	Window window_video("video");
-	Window window_hsv("hsv");
-	Window window_thresh("thresh");
-	
-	unsigned long long distance = 0;
-
-	while(true)
-	{
-		RGBFrame rgb_frame = camera->getRGBFrame();
-
-		//rgb_frame.resize(1024, 960);
-		
 		Mat f = rgb_frame.getMat();
 
-		if(!f.data)
-		{
-			continue;
-		}
-
-		HSVFrame hsv_frame(rgb_frame);
 		ThreshFrame thresh_frame(rgb_frame);
 
 		vector<vector<Point> > contours;
@@ -54,33 +43,21 @@ void on_trackbar( int, void* )
 //      u << "Servo Pos: " << (int)driveSystem->getServoPos();
 //      std::string text3(u.str());
 //		rgb_frame.printText(Point(20,60), Color::GREEN, text3);
-
-		window_video.renderFrame(rgb_frame);
-
-		window_hsv.renderFrame(hsv_frame);
-		window_thresh.renderFrame(thresh_frame);
-	
-//			uint8_t servoPos = driveSystem->getServoPos();
-//			servoPos += 5;
-//			if(servoPos >= 180)
-//			{
-//				servoPos = 0;
-//			}
-//			driveSystem->setServoPos(servoPos);
+//		driveSystem->setServoPos(servoPos);
 */
 Project::Project() : Application()
 {
 }
 
-int slider;
-
 void Project::setup()
 {
+	camera = new Camera();
 //	Explorer::init();
 
-	w1 = createWindow("w1");
-//	setTrackbarPos(string("t1"),string("w1"),0);
-	createTrackbar("t1", "w1", &slider, 180, on_trackbar);
+	w1 = createWindow("Motor Lab");
+	w1->createSlider("Servo Position", 180, slider_servo_callback);
+	w1->createSlider("DC Motor Rotation/Speed", 100, slider_dc_motor_callback);
+	w1->createSlider("Stepper Motor Degrees", 100, slider_stepper_motor_callback);
 
 	cout << "Setup" << endl;
 
@@ -89,7 +66,11 @@ void Project::setup()
 
 void Project::loop()
 {
-//	cout << "Loop" << endl;
+	RGBFrame rgb_frame = camera->getRGBFrame();
+	//rgb_frame.resize(1024, 960);
+	HSVFrame hsv_frame(rgb_frame);
+
+	w1->renderFrames4(rgb_frame, hsv_frame, rgb_frame, rgb_frame);
 }
 
 void Project::keyPressed(char key)

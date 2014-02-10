@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+typedef void (*WindowSliderCallback)(int, void*);
+
 class Window
 {
   private:
@@ -19,7 +21,12 @@ class Window
     ~Window(); 
 
     string getName();
+  
+    void createSlider(string sliderName, int max, WindowSliderCallback callback);
+
     void renderFrame(Frame frame);
+    void renderFrames2(Frame frame1, Frame frame2);
+    void renderFrames4(Frame frame1, Frame frame2, Frame frame3, Frame frame4);
 };
 
 #endif

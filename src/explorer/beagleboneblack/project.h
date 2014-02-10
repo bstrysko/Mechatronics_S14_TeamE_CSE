@@ -3,6 +3,10 @@
 
 #include <application/application.h>
 #include <application/window.h>
+
+#include <frame/rgb_frame.h>
+#include <frame/hsv_frame.h>
+
 #include <explorer.h>
 
 #include <iostream>

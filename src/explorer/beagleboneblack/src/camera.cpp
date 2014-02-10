@@ -17,8 +17,10 @@ RGBFrame Camera::getRGBFrame()
 {
 	Mat frame;
 
-	camera >> frame;
-
-	//TODO: check if frame is empty
+	while(!frame.data)
+	{
+		camera >> frame;
+	}
+	
 	return RGBFrame(frame);
 }
