@@ -2,7 +2,6 @@
 
 DriveSystem::DriveSystem(I2CBus* bus, uint8_t address) : I2CDevice(bus, address)
 {
-	this->servo_pos = 0;
 }
 
 DriveSystem::~DriveSystem()
@@ -10,14 +9,43 @@ DriveSystem::~DriveSystem()
 
 }
 
+uint8_t DriveSystem::getPotPos()
+{
+	uint8_t potPos;
+	i2c_read(REGISTER_POT, &potPos, 1);
+	return potPos;
+}
+   
+bool DriveSystem::getIRSensor()
+{
+	uint8_t v;
+	i2c_read(REGISTER_IR_SENSOR, &v, 1);
+	return (v) ? true : false;
+}
+
+bool DriveSystem::getSwitch()
+{
+	uint8_t v;
+	i2c_read(REGISTER_SWITCH, &v, 1);
+	return (v) ? true : false;
+}
+
 uint8_t DriveSystem::getServoPos()
 {
-	return servo_pos;
+	uint8_t servoPos;
+	i2c_read(REGISTER_SERVO, &servoPos, 1);
+	return servoPos;
 }
     
 void DriveSystem::setServoPos(uint8_t pos)
 {
-	this->servo_pos = pos;
-
-	i2c_write(SERVO_REGISTER, &pos, 1);
+	i2c_write(REGISTER_SERVO, &pos, 1);
 }
+
+void DriveSystem::moveStepper(bool forward, uint8_t degrees)
+{
+	uint8_t d = forward ? 0x80 : 0x0;
+	uint8_t v = d | degrees;
+	i2c_write(REGISTER_STEPPER_MOTOR, &v, 1);
+}
+
