@@ -20,6 +20,7 @@ void Window::createSlider(string sliderName, int max, WindowSliderCallback callb
 {
 	//Do not need n but will never remove sidebar during program execution
 	int* n = new int;
+	*n = 0;
 	createTrackbar(sliderName, name, n, max, callback);
 }
 

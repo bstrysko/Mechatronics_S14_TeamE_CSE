@@ -6,6 +6,8 @@
 
 #include <frame/rgb_frame.h>
 #include <frame/hsv_frame.h>
+#include <frame/thresh_frame.h>
+#include <frame/text_frame.h>
 
 #include <explorer.h>
 

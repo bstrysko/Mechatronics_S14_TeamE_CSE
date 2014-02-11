@@ -7,7 +7,6 @@ void Frame::create(Mat frame)
 
 Frame::~Frame()
 {
-
 }
 
 Mat Frame::getMat()
@@ -30,6 +29,11 @@ void Frame::resize(int width, int height)
 	Mat dest;
 	cv::resize(frame, dest, Size(width, height));
 	this->frame = dest;
+}
+
+void Frame::printText(Point point, Color color, ostringstream& stream)
+{
+	printText(point, color, stream.str());
 }
 
 void Frame::printText(Point point, Color color, string text)

@@ -7,10 +7,16 @@
 
 class ThreshFrame : public Frame
 {
+  private:
+    Mat singleChannelMat;
+    ThreshFrame(Mat m, Scalar lowBound, Scalar highBound);
+
   public:
-    ThreshFrame(RGBFrame frame);
-    ThreshFrame(HSVFrame frame);
+    ThreshFrame(RGBFrame frame, Scalar lowBound, Scalar highBound);
+    ThreshFrame(HSVFrame frame, Scalar lowBound, Scalar highBound);
     ~ThreshFrame();
+
+    Mat getSingleChannelMat();
 };
 
 #endif

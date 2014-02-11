@@ -13,6 +13,7 @@ OBJS =  \
  src/frame/thresh_frame.o \
  src/frame/frame.o \
  src/frame/hsv_frame.o \
+ src/frame/text_frame.o \
  src/i2c/i2c_bus.o \
  src/i2c/i2c_device.o \
  src/rgb_sensor.o

@@ -1,19 +1,36 @@
 #include <frame/thresh_frame.h>
 
-ThreshFrame::ThreshFrame(RGBFrame frame)
+ThreshFrame::ThreshFrame(Mat m, Scalar lowBound, Scalar highBound)
 {
-	Mat thresh;	
-	inRange(frame.getMat(), Scalar(0, 0, 100), cv::Scalar(70, 70, 255), thresh);
-	create(thresh);
+	Mat thresh;
+	inRange(m, lowBound, highBound, thresh);
+
+	this->singleChannelMat = thresh;
+
+    vector<Mat> channels;
+	channels.push_back(thresh);
+	channels.push_back(thresh);
+	channels.push_back(thresh);
+
+	Mat result;
+	merge(channels, result);
+
+	create(result);
 }
 
-ThreshFrame::ThreshFrame(HSVFrame frame)
+ThreshFrame::ThreshFrame(RGBFrame frame, Scalar lowBound, Scalar highBound) : ThreshFrame(frame.getMat(), lowBound, highBound)
 {
-	Mat thresh;	
-	inRange(frame.getMat(), Scalar(0, 255, 255), cv::Scalar(20, 255, 255), thresh);
-	create(thresh);
+}
+
+ThreshFrame::ThreshFrame(HSVFrame frame, Scalar lowBound, Scalar highBound) : ThreshFrame(frame.getMat(), lowBound, highBound)
+{
 }
 
 ThreshFrame::~ThreshFrame()
 {
+}
+
+Mat ThreshFrame::getSingleChannelMat()
+{
+	return singleChannelMat;
 }

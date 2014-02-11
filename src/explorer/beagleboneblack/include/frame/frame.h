@@ -25,6 +25,7 @@ class Frame
 
     void resize(int width, int height);
 
+    void printText(Point point, Color color, ostringstream& stream);
     void printText(Point point, Color color, string text);
 };
 
