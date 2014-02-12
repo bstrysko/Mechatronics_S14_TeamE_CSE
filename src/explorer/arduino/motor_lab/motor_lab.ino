@@ -1,11 +1,25 @@
+#include <Stepper.h>
+
 #include <Wire.h>
 #include <I2CDevice.h>
 
 #include <Servo.h>
+#include<Metro.h>
+#include <PID_v1.h>
+
+#include <Bounce2.h>
+
+Bounce debouncer = Bounce(); 
 
 #define PIN_SERVO 11
-#define PIN_STEPPER_STEP 8
-#define PIN_STEPPER_DIR 9
+#define PIN_STEPPER0 6
+#define PIN_STEPPER1 7
+#define PIN_STEPPER2 9
+#define PIN_STEPPER3 8
+#define PIN_DC_MOTOR0 3
+#define PIN_DC_MOTOR1 5
+#define PIN_ENCODER_A 2
+
 #define PIN_POT 0
 #define PIN_IR_SENSOR 10
 #define PIN_SWITCH 12
@@ -22,11 +36,40 @@ void i2cWrite(byte reg, byte* buffer, byte buffer_size);
 
 
 Servo servo;
-byte stepperNumSteps;
+Stepper stepper(400, PIN_STEPPER0, PIN_STEPPER1, PIN_STEPPER2, PIN_STEPPER3); 
+int stepperSteps;
+volatile unsigned int encoder0Count;
+unsigned int oldEncoder0Count;
+double dcMotorSpeed, dcMotorTargetSpeed, dcMotorOutput;
+Metro dcMotorEncoderMetro(10);
+PID dcMotorPID(&dcMotorSpeed, &dcMotorOutput, &dcMotorTargetSpeed, 1, 1, 0, DIRECT);
+boolean dcMotorDirection;
+volatile boolean dcMotorContinuous;
+volatile unsigned int encoderTarget;
+
 
 byte valuePot;
 byte valueIRSensor;
 byte valueSwitch;
+
+void interruptEncoder()
+{
+  encoder0Count++;
+ 
+  if(!dcMotorContinuous)
+  {
+    if(encoderTarget > 0)
+    {
+      encoderTarget--;
+    }
+    else if(encoderTarget == 0)
+    {
+      digitalWrite(PIN_DC_MOTOR0, LOW);
+      digitalWrite(PIN_DC_MOTOR1, LOW);
+
+    }
+  }
+}
 
 void setup()
 {
@@ -36,9 +79,16 @@ void setup()
   servo.attach(PIN_SERVO);
   servo.write(0);
 
-  pinMode(PIN_STEPPER_STEP, OUTPUT);
-  pinMode(PIN_STEPPER_DIR, OUTPUT);
-  digitalWrite(PIN_STEPPER_DIR, 0);
+  stepper.setSpeed(20);
+  stepper.step(400);
+  stepperSteps = 0;
+  
+  pinMode(PIN_DC_MOTOR0, OUTPUT);
+  pinMode(PIN_DC_MOTOR1, OUTPUT);
+  digitalWrite(PIN_DC_MOTOR0, LOW);
+  digitalWrite(PIN_DC_MOTOR1, LOW);
+  pinMode(PIN_ENCODER_A, INPUT);
+  digitalWrite(PIN_ENCODER_A, HIGH);
   
   pinMode(PIN_IR_SENSOR, INPUT);
   pinMode(PIN_SWITCH, INPUT);
@@ -46,6 +96,17 @@ void setup()
   valuePot = 0;
   valueIRSensor = 0;
   valueSwitch = 0;
+  
+  encoderTarget = 0;
+  dcMotorContinuous = false;
+  dcMotorTargetSpeed = 0;
+  
+  attachInterrupt(0, interruptEncoder, CHANGE);
+  dcMotorPID.SetMode(AUTOMATIC);
+  dcMotorDirection = true;
+  
+  debouncer.attach(PIN_SWITCH);
+  debouncer.interval(5);
   
   I2CDevice::init(0x12, i2cRead, i2cWrite);
 }
@@ -68,19 +129,8 @@ byte calculateServoPos(byte servoPos)
   }
 }
 
-void stepperMotorTakeSingleStep()
-{
-    int stepPulseWidthInMicroSec = 2;
-
-    digitalWrite(PIN_STEPPER_STEP, LOW);
-    delayMicroseconds(stepPulseWidthInMicroSec); 
-    digitalWrite(PIN_STEPPER_STEP, HIGH); 
-    delayMicroseconds(stepPulseWidthInMicroSec); 
-    digitalWrite(PIN_STEPPER_STEP, LOW);
-}
-
 void loop()
-{
+{  
    int sum = 0;
    for(int i = 0; i < 10; i++)
    {
@@ -90,20 +140,37 @@ void loop()
    
    valueIRSensor = digitalRead(PIN_IR_SENSOR);
    
-   //TODO: debouncing
-   valueSwitch = digitalRead(PIN_SWITCH);
+   debouncer.update();
+   valueSwitch = debouncer.read();
    
    if(valueSwitch)
    {
      servo.write(calculateServoPos(valuePot));
-     //Serial.println(servo.read());
    }
    
-   if(stepperNumSteps > 0)
+   stepper.step(stepperSteps);
+   stepperSteps = 0;
+   
+   if(dcMotorContinuous)
    {
-     stepperNumSteps--;
-     stepperMotorTakeSingleStep();
-     delay(1);
+     if(dcMotorEncoderMetro.check() == 1)
+     {
+       dcMotorSpeed=((double)encoder0Count-(double)oldEncoder0Count)*3;
+       oldEncoder0Count = encoder0Count;
+     }
+    
+     dcMotorPID.Compute();
+
+     if(dcMotorDirection)
+     {
+       digitalWrite(PIN_DC_MOTOR0, LOW);
+       analogWrite(PIN_DC_MOTOR1, dcMotorOutput);
+     }
+     else
+     {
+       digitalWrite(PIN_DC_MOTOR1, LOW);
+       analogWrite(PIN_DC_MOTOR0, dcMotorOutput);
+     }
    }
 }
 
@@ -148,17 +215,41 @@ void i2cWrite(byte reg, byte* buffer, byte buffer_size)
      }
      case REGISTER_DC_MOTOR:
      {
-       //TODO
+       dcMotorContinuous = (buffer[0] == 1) ? true : false;
+       dcMotorDirection = (!(!(buffer[1] & 0x80)));
+              
+       short deg = (buffer[1] << 8) | buffer[2];
+       
+       deg = abs(deg);
+       
+       if(dcMotorContinuous)
+       {
+         dcMotorTargetSpeed = map(deg, 0, 270, 0, 132);
+         encoder0Count = 0;
+       }
+       else
+       {
+         encoderTarget = (unsigned int)((float)deg*(11.0));
+         
+         if(dcMotorDirection)
+         {
+           digitalWrite(PIN_DC_MOTOR0, LOW);
+           analogWrite(PIN_DC_MOTOR1, 50);
+         }
+         else
+         {
+           digitalWrite(PIN_DC_MOTOR1, LOW);
+           analogWrite(PIN_DC_MOTOR0, 50);
+         }
+       }
+       
        break;
      }
      case REGISTER_STEPPER_MOTOR:
      {
-       byte temp = buffer[0];
-       stepperNumSteps = (byte)(((float)(temp & (~0x80))) / 0.14);
-       byte dir = !(!(temp & 0x80));
-       Serial.println(dir);
-       digitalWrite(PIN_STEPPER_DIR, dir);
-       break; 
+       short deg = (buffer[1] << 8) | buffer[0];
+       stepperSteps = (int)(((float)(deg)/360.0) * 401.0);
+       break;
      }
   }
 }
