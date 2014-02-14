@@ -1,1 +1,18 @@
-Install WireDevice library (https://github.com/bstrysko/WireDevice)
+Install WireDevice library 
+https://github.com/bstrysko/WireDevice
+
+MotorLab
+=============
+Install Metro Library
+http://playground.arduino.cc/code/metro
+
+Install PID Library
+https://github.com/br3ttb/Arduino-PID-Library
+
+Install Bounce Library
+http://playground.arduino.cc/code/bounce
+
+
+DriveSystem
+=============
+

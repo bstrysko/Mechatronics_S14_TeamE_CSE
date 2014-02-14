@@ -1,7 +1,24 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * This code is responsible for responding to I2C read/write commands
+ * from the BeagleBoneBlack, reading from all sensors, and updating the state
+ * of all motors.
+ *
+ * Created On: 2/8/14
+ */
+
 #include <Stepper.h>
 
 #include <Wire.h>
-#include <I2CDevice.h>
+#include <WireDevice.h>
 
 #include <Servo.h>
 #include<Metro.h>
@@ -10,6 +27,8 @@
 #include <Bounce2.h>
 
 Bounce debouncer = Bounce(); 
+
+#define WIRE_DEVICE_ID 0x12
 
 #define PIN_SERVO 11
 #define PIN_STEPPER0 6
@@ -31,8 +50,8 @@ Bounce debouncer = Bounce();
 #define REGISTER_IR_SENSOR 11
 #define REGISTER_SWITCH 12
 
-byte i2cRead(byte reg, byte* buffer);
-void i2cWrite(byte reg, byte* buffer, byte buffer_size);
+byte wireDeviceRead(byte reg, byte* buffer);
+void wireDeviceWrite(byte reg, byte* buffer, byte bufferSize);
 
 
 Servo servo;
@@ -52,6 +71,9 @@ byte valuePot;
 byte valueIRSensor;
 byte valueSwitch;
 
+/*
+ * Called every encoder tick
+ */
 void interruptEncoder()
 {
   encoder0Count++;
@@ -71,6 +93,10 @@ void interruptEncoder()
   }
 }
 
+/*
+ * Initialize all sensors, motors, PID control,
+ * and I2CBus.
+ */
 void setup()
 {
   Serial.begin(9600);
@@ -108,9 +134,13 @@ void setup()
   debouncer.attach(PIN_SWITCH);
   debouncer.interval(5);
   
-  I2CDevice::init(0x12, i2cRead, i2cWrite);
+  WireDevice.begin(WIRE_DEVICE_ID, wireDeviceRead, wireDeviceWrite);
 }
 
+/*
+ * Only move the servo when there is a reasonable
+ * distance to move.
+ */
 byte calculateServoPos(byte servoPos)
 {
   byte oldServoPos = servo.read();
@@ -129,6 +159,9 @@ byte calculateServoPos(byte servoPos)
   }
 }
 
+/*
+ * Read the sensors, calculate PID values, and debounce the switch.
+ */
 void loop()
 {  
    int sum = 0;
@@ -174,8 +207,14 @@ void loop()
    }
 }
 
-
-byte i2cRead(byte reg, byte* buffer)
+/*
+ * Called when the BeagleBone wants to read data from the Arduino 
+ * @param reg the register the beaglebone wants to read data from
+ * @param buffer a byte array that the Arduino will send back 
+ * to the BeagleBone
+ * @return the number of bytes to send back to the Beaglebone
+ */
+byte wireDeviceRead(byte reg, byte* buffer)
 { 
   switch(reg)
   {
@@ -204,7 +243,14 @@ byte i2cRead(byte reg, byte* buffer)
   return 0;
 }
 
-void i2cWrite(byte reg, byte* buffer, byte buffer_size)
+/*
+ * Called when the BeagleBone wants to write to the Arduino
+ * @param reg the register the beaglebone wants to write data to
+ * @param buffer a byte array of size bufferSize containing data
+ * from the Beaglebone.
+ * @param bufferSize the size of buffer
+ */
+void wireDeviceWrite(byte reg, byte* buffer, byte bufferSize)
 {
   switch(reg)
   {
