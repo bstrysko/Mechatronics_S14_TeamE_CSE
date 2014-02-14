@@ -1,3 +1,22 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * This code is responsible for reading input from the user either
+ * from the GUI or the keyboard, updating the GUI, performing red
+ * detection on the camera input, and sending the correct commands
+ * to the Arduino connected to the BeagleBone I2C Bus.
+ * 
+ * Created On: 2/2/14
+ */
+
+
 #include "project.h"
 
 Window* w1;

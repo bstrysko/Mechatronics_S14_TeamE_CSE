@@ -1,6 +1,8 @@
 #ifndef _EXPLORARE_EXPLORER_H_
 #define _EXPLORARE_EXPLORER_H_
 
+#include <I2CMaster/I2CBus.h>
+
 #include "drive_system.h"
 #include "rgb_sensor.h"
 #include "camera.h"

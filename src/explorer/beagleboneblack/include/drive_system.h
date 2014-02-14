@@ -1,8 +1,8 @@
 #ifndef _EXPLORARE_DRIVE_SYSTEM_H_
 #define _EXPLORARE_DRIVE_SYSTEM_H_
 
-#include "i2c/i2c_device.h"
-#include "i2c/i2c_bus.h"
+#include <I2CMaster/I2CDevice.h>
+#include <I2CMaster/I2CBus.h>
 
 #include <stdint.h>
 

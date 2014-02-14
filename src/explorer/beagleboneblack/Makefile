@@ -14,19 +14,19 @@ OBJS =  \
  src/frame/frame.o \
  src/frame/hsv_frame.o \
  src/frame/text_frame.o \
- src/i2c/i2c_bus.o \
- src/i2c/i2c_device.o \
  src/rgb_sensor.o
 
-CFLAGS = -Iinclude/ $(shell pkg-config --cflags opencv)
-LIBS = $(shell pkg-config --libs opencv)
+DEPFILES = $(patsubst %.o,%.dep,$(OBJS))
 
-REBUILDABLES = $(OBJS) $(LINK_TARGET)
+CFLAGS = -Iinclude/ $(shell pkg-config --cflags opencv)
+LIBS = $(shell pkg-config --libs opencv) -l I2CMaster
+
+REBUILDABLES = $(OBJS) $(LINK_TARGET) $(DEPFILES)
 
 all : $(LINK_TARGET)
 	@echo "Build complete"
 
-clean : 
+clean :
 	rm -f $(REBUILDABLES)
 	@echo "Clean complete"
 
