@@ -1,4 +1,0 @@
-I2CDevice   KEYWORD1
-init    KEYWORD2
-i2c_read_func     KEYWORD2
-i2c_write_func     KEYWORD2
