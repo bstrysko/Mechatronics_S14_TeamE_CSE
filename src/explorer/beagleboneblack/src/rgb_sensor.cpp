@@ -1,11 +1,61 @@
 #include "rgb_sensor.h"
 
-RGBSensor::RGBSensor(I2CBus* bus, uint8_t address) : I2CDevice(bus, address)
+RGBSensor::RGBSensor(I2CBus* bus) : I2CDevice(bus, RGB_SENSOR_ADDRESS)
 {
-	
+	if(getID() != 0x44)
+	{
+		throw ios_base::failure("Cannot connect to RGBSensor");
+	}
+
+	enable();
 }
 
 RGBSensor::~RGBSensor()
 {
 
+}
+
+void RGBSensor::enable()
+{
+	uint8_t v = RGB_SENSOR_ENABLE_PON;
+	i2cWrite(RGB_SENSOR_REGISTER_ENABLE, &v, 1);
+	usleep(3);
+	v |= RGB_SENSOR_ENABLE_AEN;
+	i2cWrite(RGB_SENSOR_REGISTER_ENABLE, &v, 1);
+}
+
+uint8_t RGBSensor::getID()
+{
+	uint8_t id;
+	i2cRead(RGB_SENSOR_REGISTER_ID, &id, 1);
+	return id;
+}
+
+void RGBSensor::setIntegrationTime(RGBSensorIntegrationTime t)
+{
+	i2cWrite(RGB_SENSOR_REGISTER_ATIME, (uint8_t*)(&t), 1);
+}
+
+void RGBSensor::setGain(RGBSensorGain g)
+{
+	i2cWrite(RGB_SENSOR_REGISTER_CONTROL, (uint8_t*)(&g), 1);
+}
+
+Color RGBSensor::getColor()
+{
+	uint16_t c, r, g, b;
+	
+	i2cRead(RGB_SENSOR_REGISTER_CDATAL, ((uint8_t*)&c), 1);
+	i2cRead(RGB_SENSOR_REGISTER_CDATAH, ((uint8_t*)&c) + 1, 1);
+
+	i2cRead(RGB_SENSOR_REGISTER_RDATAL, ((uint8_t*)&r), 1);
+	i2cRead(RGB_SENSOR_REGISTER_RDATAH, ((uint8_t*)&r) + 1, 1);
+
+	i2cRead(RGB_SENSOR_REGISTER_GDATAL, ((uint8_t*)&g), 1);
+	i2cRead(RGB_SENSOR_REGISTER_GDATAH, ((uint8_t*)&g) + 1, 1);
+
+	i2cRead(RGB_SENSOR_REGISTER_BDATAL, ((uint8_t*)&b), 1);
+	i2cRead(RGB_SENSOR_REGISTER_BDATAH, ((uint8_t*)&b) + 1, 1);
+
+	return Color(r, g, b, c);
 }
