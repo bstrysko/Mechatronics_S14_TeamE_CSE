@@ -22,6 +22,7 @@
 Window* w1;
 Camera* camera;
 DriveSystem* driveSystem;
+RGBSensor* rgbSensor;
 bool motorForward;
 bool motorFreeRun;
 int16_t motorSpeed;
@@ -53,6 +54,7 @@ void Project::setup()
 	Explorer::init();
 
 	driveSystem = Explorer::getDriveSystem();
+	rgbSensor = Explorer::getRGBSensor();
 
 	motorForward = true;
 	motorFreeRun = false;
@@ -69,6 +71,10 @@ void Project::setup()
 
 void Project::loop()
 {
+	Color c = rgbSensor->getColor();
+
+	cout << (int)c.getRed() << "," << (int)c.getGreen() << "," << (int)c.getBlue() << "," << (int)c.getAlpha() << endl;
+
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
 	HSVFrame hsv_frame(rgb_frame);
