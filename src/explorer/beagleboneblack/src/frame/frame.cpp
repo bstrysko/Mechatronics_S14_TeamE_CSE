@@ -39,6 +39,6 @@ void Frame::printText(Point point, Color color, ostringstream& stream)
 void Frame::printText(Point point, Color color, string text)
 {
     putText(frame, text, point, FONT_HERSHEY_SIMPLEX,
-		0.8, Scalar(color.getRed(),color.getGreen(),color.getBlue(),
+		0.5, Scalar(color.getRed(),color.getGreen(),color.getBlue(),
 		color.getAlpha()), 1, CV_AA);
 }

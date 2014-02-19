@@ -39,3 +39,10 @@ uint8_t Color::getAlpha()
 {
 	return alpha;
 }
+
+ostream& operator<<(ostream& os, const Color& color)
+{
+	return os << "(" << (int)color.red << ", " <<
+		(int)color.green << ", " << (int)color.blue << ", " <<
+		(int)color.alpha << ")";
+}

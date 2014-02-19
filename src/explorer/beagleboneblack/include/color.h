@@ -3,6 +3,10 @@
 
 #include <stdint.h>
 
+#include <iostream>
+
+using namespace std;
+
 class Color
 {
   private:
@@ -20,6 +24,8 @@ class Color
     static Color RED;
     static Color GREEN;
     static Color BLUE;
+
+    friend ostream& operator<<(ostream& os, const Color& color);
 };
 
 #endif
