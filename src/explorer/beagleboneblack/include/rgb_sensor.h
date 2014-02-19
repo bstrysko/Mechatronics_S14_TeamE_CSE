@@ -1,3 +1,22 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The RGBSensor class is used to communicate
+ * with a single RGB Sensor connected to the
+ * Beaglebone Black I2C bus.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_RGB_SENSOR_H_
 #define _EXPLORARE_RGB_SENSOR_H_
 

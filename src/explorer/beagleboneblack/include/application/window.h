@@ -1,3 +1,21 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The Window class is an abstraction
+ * around OpenCV's window functions.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_APPLICATION_WINDOW_H_
 #define _EXPLORARE_APPLICATION_WINDOW_H_
 

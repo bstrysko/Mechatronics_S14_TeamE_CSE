@@ -1,3 +1,20 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * Implementation of Application class.
+ *
+ * Created On: 2/1/14
+ */
+
 #include <application/application.h>
 
 Application::Application()

@@ -1,3 +1,20 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * Implementation of ThreshFrame class.
+ *
+ * Created On: 2/1/14
+ */
+
 #include <frame/thresh_frame.h>
 
 ThreshFrame::ThreshFrame(Mat m, Scalar lowBound, Scalar highBound)

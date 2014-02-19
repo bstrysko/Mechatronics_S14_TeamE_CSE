@@ -1,3 +1,21 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The Project class is where all the code specific
+ * to the CSI challenge will go(path planning, etc).
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_PROJECT_H_
 #define _EXPLORARE_PROJECT_H_
 

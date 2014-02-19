@@ -1,3 +1,22 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The Application class provides a general
+ * program structure with helper methods in order
+ * to simplify the main code.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_APPLICATION_APPLICATION_H_
 #define _EXPLORARE_APPLICATION_APPLICATION_H_
 

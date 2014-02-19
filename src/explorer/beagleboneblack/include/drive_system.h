@@ -1,3 +1,21 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The DriveSystem class represents the
+ * Drive System subsystem of the Explorer.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_DRIVE_SYSTEM_H_
 #define _EXPLORARE_DRIVE_SYSTEM_H_
 

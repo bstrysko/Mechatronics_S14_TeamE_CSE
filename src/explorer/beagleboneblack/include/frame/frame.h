@@ -1,3 +1,21 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The virtual Frame class represents
+ * a generic image frame with no specific contents.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_FRAME_FRAME_H_
 #define _EXPLORARE_FRAME_FRAME_H_
 

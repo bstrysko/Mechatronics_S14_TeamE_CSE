@@ -1,3 +1,22 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * The Explorer class is a factory
+ * that provides methods to obtain
+ * instances of major Explorer subsystems.
+ *
+ * Created On: 2/1/14
+ */
+
 #ifndef _EXPLORARE_EXPLORER_H_
 #define _EXPLORARE_EXPLORER_H_
 

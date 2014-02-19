@@ -1,3 +1,20 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * Implementation of DriveSystem class.
+ *
+ * Created On: 2/1/14
+ */
+
 #include <drive_system.h>
 
 DriveSystem::DriveSystem(I2CBus* bus, uint8_t address) : I2CDevice(bus, address)

@@ -7,7 +7,10 @@
  * Wen Li
  * Caroline Colombo
  * Funan Ma
+ *
+ * @author Brent Strysko
  * 
+ * Implementation of the Project class.
  * This code is responsible for reading input from the user either
  * from the GUI or the keyboard, updating the GUI, performing red
  * detection on the camera input, and sending the correct commands

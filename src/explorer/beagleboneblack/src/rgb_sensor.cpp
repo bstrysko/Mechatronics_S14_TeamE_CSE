@@ -1,3 +1,20 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * Implementation of RGBSensor class.
+ *
+ * Created On: 2/1/14
+ */
+
 #include "rgb_sensor.h"
 
 RGBSensor::RGBSensor(I2CBus* bus) : I2CDevice(bus, RGB_SENSOR_ADDRESS)

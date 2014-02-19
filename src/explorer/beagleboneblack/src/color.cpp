@@ -1,3 +1,20 @@
+/*
+ * Mechatronics (Spring 2014)
+ * Team Name: Explorare
+ *
+ * Team Member Names:
+ * Brent Strysko
+ * Wen Li
+ * Caroline Colombo
+ * Funan Ma
+ * 
+ * @author Brent Strysko
+ *
+ * Implementation of Color class.
+ *
+ * Created On: 2/1/14
+ */
+
 #include <color.h>
 
 Color Color::RED = Color(255, 0, 0);

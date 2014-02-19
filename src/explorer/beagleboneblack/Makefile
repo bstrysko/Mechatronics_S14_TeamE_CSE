@@ -1,3 +1,20 @@
+#
+# Mechatronics (Spring 2014)
+# Team Name: Explorare
+#
+# Team Member Names:
+# Brent Strysko
+# Wen Li
+# Caroline Colombo
+# Funan Ma
+# 
+# @author Brent Strysko
+#
+# Makefile for Beaglebone Code
+#
+# Created On: 2/1/14
+#
+
 LINK_TARGET = main
 
 OBJS =  \
