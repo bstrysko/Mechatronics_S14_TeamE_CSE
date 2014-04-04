@@ -33,6 +33,8 @@ Project::Project() : Application()
 
 void Project::setup()
 {
+	setDelay(200);
+
 	Explorer::init();
 
 	driveSystem = Explorer::getDriveSystem();
@@ -50,17 +52,17 @@ void Project::loop()
 	ThreshFrame thresh_frame(hsv_frame, Scalar(160, 0, 0), Scalar(255, 255, 255));
 	TextFrame text_frame(rgb_frame);
 	
-	Color c = rgbSensor->getColor();
+//	Color c = rgbSensor->getColor();
 
 	ostringstream t;
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
 	text_frame.printText(Point(20,40), Color::GREEN, t);
 	t.str("");
-
+/*
     t << "Color: " << c;
 	text_frame.printText(Point(20,60), Color::GREEN, t);
 	t.str("");
-
+*/
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
 
