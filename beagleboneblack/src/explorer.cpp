@@ -26,7 +26,7 @@ void Explorer::init()
 {
 	i2cBus = new I2CBus(I2C_BUS_NUMBER);
 
-//	driveSystem = new DriveSystem(i2cBus, DRIVE_SYSTEM_ADDRESS);
+	driveSystem = new DriveSystem(i2cBus, DRIVE_SYSTEM_ADDRESS);
 
 	rgbColorSensorArray = new RGBColorSensorArray(i2cBus, RGB_COLOR_SENSOR_ARRAY_ADDRESS);
 	LEDState s = ENABLED;

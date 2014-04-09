@@ -41,11 +41,17 @@ void Project::setup()
 	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
 	camera = Explorer::getCamera();
 
+	driveSystem->setPosition(100.0, -200.0);
+
 	w1 = createWindow("Explorer");
 }
 
 void Project::loop()
 {
+	float x, y, angle;
+	driveSystem->getPosition(&x, &y, &angle);
+	cout << x << ", " << y << " | " << angle << endl;
+
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
 	HSVFrame hsv_frame(rgb_frame);

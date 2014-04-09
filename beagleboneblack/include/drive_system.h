@@ -24,12 +24,8 @@
 
 #include <stdint.h>
 
-#define REGISTER_SERVO 1
-#define REGISTER_DC_MOTOR 2
-#define REGISTER_STEPPER_MOTOR 3
-#define REGISTER_POT 10
-#define REGISTER_IR_SENSOR 11
-#define REGISTER_SWITCH 12
+#define DRIVE_SYSTEM_REGISTER_POSITION_WRITE 0x1
+#define DRIVE_SYSTEM_REGISTER_POSITION_READ 0x2
 
 class DriveSystem : I2CDevice
 {
@@ -37,23 +33,8 @@ class DriveSystem : I2CDevice
     DriveSystem(I2CBus* bus, uint8_t address);
     ~DriveSystem();
 
-    uint8_t getPotPos();
-    bool getIRSensor();
-    bool getSwitch();
-
-    uint8_t getServoPos();
-    void setServoPos(uint8_t pos);
-
-    void moveStepper(int16_t degrees);
-
-    void setDCMotor(bool continuous, int16_t degrees);
-
-    //uint64_t getDistanceTraveled();
-    //TODO: get orientation
-
-    //TODO: figure out units of measurement
-    //void driveForward(uint8_t cm);
-    //void turn(short degrees);
+    void getPosition(float* x, float* y, float* angle);
+    void setPosition(float x, float y);
 };
 
 #endif
