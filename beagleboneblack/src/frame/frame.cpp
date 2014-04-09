@@ -48,14 +48,14 @@ void Frame::resize(int width, int height)
 	this->frame = dest;
 }
 
-void Frame::printText(Point point, Color color, ostringstream& stream)
+void Frame::printText(Point point, Color color, uint8_t alpha, ostringstream& stream)
 {
-	printText(point, color, stream.str());
+	printText(point, color, alpha, stream.str());
 }
 
-void Frame::printText(Point point, Color color, string text)
+void Frame::printText(Point point, Color color, uint8_t alpha, string text)
 {
     putText(frame, text, point, FONT_HERSHEY_SIMPLEX,
 		0.5, Scalar(color.getRed(),color.getGreen(),color.getBlue(),
-		color.getAlpha()), 1, CV_AA);
+		alpha), 1, CV_AA);
 }

@@ -19,7 +19,7 @@
 #ifndef _EXPLORARE_FRAME_FRAME_H_
 #define _EXPLORARE_FRAME_FRAME_H_
 
-#include <color.h>
+#include <RGBColorSensorArray/Color.h>
 
 #include <string>
 
@@ -43,8 +43,8 @@ class Frame
 
     void resize(int width, int height);
 
-    void printText(Point point, Color color, ostringstream& stream);
-    void printText(Point point, Color color, string text);
+    void printText(Point point, Color color, uint8_t alpha, ostringstream& stream);
+    void printText(Point point, Color color, uint8_t alpha, string text);
 };
 
 #endif
