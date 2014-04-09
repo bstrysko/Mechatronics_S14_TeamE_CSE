@@ -22,7 +22,6 @@
 #include <string>
 #include <opencv2/opencv.hpp>
 
-#include <application/window.h>
 #include <frame/frame.h>
 
 using namespace std;

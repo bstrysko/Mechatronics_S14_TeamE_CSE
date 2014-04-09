@@ -1,0 +1,20 @@
+.tile
+{
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.tile-unknown
+{
+    background-color: rgba(120, 120, 120, 0.4);
+}
+
+.tile-ndefect
+{
+    background-color: rgba(0, 230, 60, 0.8);
+}
+
+.tile-defect
+{
+    background-color: rgba(230, 40, 40, 0.8);
+}
