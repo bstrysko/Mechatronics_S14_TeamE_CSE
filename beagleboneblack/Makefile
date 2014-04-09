@@ -23,20 +23,18 @@ OBJS =  \
  src/application/application.o \
  src/application/window.o \
  src/camera.o \
- src/color.o \
  src/drive_system.o \
  src/explorer.o \
  src/frame/rgb_frame.o \
  src/frame/thresh_frame.o \
  src/frame/frame.o \
  src/frame/hsv_frame.o \
- src/frame/text_frame.o \
- src/rgb_sensor.o
+ src/frame/text_frame.o
 
 DEPFILES = $(patsubst %.o,%.dep,$(OBJS))
 
-CFLAGS = -Iinclude/ $(shell pkg-config --cflags opencv)
-LIBS = $(shell pkg-config --libs opencv) -l I2CMaster
+CFLAGS = -Iinclude/ -I/usr/include/ $(shell pkg-config --cflags opencv)
+LIBS = -l RGBColorSensorArray -l I2CMaster -l AVRI2CBootloader -l IntelHexParser $(shell pkg-config --libs opencv)
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET) $(DEPFILES)
 

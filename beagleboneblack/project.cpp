@@ -25,7 +25,7 @@
 Window* w1;
 Camera* camera;
 DriveSystem* driveSystem;
-RGBSensor* rgbSensor;
+RGBColorSensorArray* rgbColorSensorArray;
 
 Project::Project() : Application()
 {
@@ -38,7 +38,7 @@ void Project::setup()
 	Explorer::init();
 
 	driveSystem = Explorer::getDriveSystem();
-	rgbSensor = Explorer::getRGBSensor();
+	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
 	camera = Explorer::getCamera();
 
 	w1 = createWindow("Explorer");
@@ -52,17 +52,28 @@ void Project::loop()
 	ThreshFrame thresh_frame(hsv_frame, Scalar(160, 0, 0), Scalar(255, 255, 255));
 	TextFrame text_frame(rgb_frame);
 	
-//	Color c = rgbSensor->getColor();
-
 	ostringstream t;
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
-	text_frame.printText(Point(20,40), Color::GREEN, t);
+	text_frame.printText(Point(20,40), Color::GREEN, 0, t);
 	t.str("");
-/*
-    t << "Color: " << c;
-	text_frame.printText(Point(20,60), Color::GREEN, t);
-	t.str("");
-*/
+	
+	vector<RGBColorSensor> data = rgbColorSensorArray->getData();
+
+	for(size_t i = 0; i < data.size(); i++)
+	{
+		RGBColorSensor s = data[i];
+		Color c = s.getColor();
+
+		ostringstream t;
+		t << (s.isDefect() ? "DEFECT" : "NON-DEFECT");
+		text_frame.printText(Point(20, 60 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
+		t.str("");
+
+		cout << s << "\t";
+	}
+
+	cout << endl;
+
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
 

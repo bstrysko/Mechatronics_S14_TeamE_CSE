@@ -23,23 +23,25 @@
 #include <I2CMaster/I2CBus.h>
 
 #include "drive_system.h"
-#include "rgb_sensor.h"
 #include "camera.h"
+
+#include <RGBColorSensorArray/RGBColorSensorArray.h>
 
 #define I2C_BUS_NUMBER 1
 #define DRIVE_SYSTEM_ADDRESS 0x12
+#define RGB_COLOR_SENSOR_ARRAY_ADDRESS 60
 
 class Explorer
 {
   private:
     static I2CBus* i2cBus;
     static DriveSystem* driveSystem;
-    static RGBSensor* rgbSensor;
+    static RGBColorSensorArray* rgbColorSensorArray;
     static Camera* camera;
   public:
     static void init();
     static DriveSystem* getDriveSystem();
-    static RGBSensor* getRGBSensor();
+    static RGBColorSensorArray* getRGBColorSensorArray();
     static Camera* getCamera();
 };
 

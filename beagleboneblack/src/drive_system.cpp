@@ -23,7 +23,6 @@ DriveSystem::DriveSystem(I2CBus* bus, uint8_t address) : I2CDevice(bus, address)
 
 DriveSystem::~DriveSystem()
 {
-
 }
 
 uint8_t DriveSystem::getPotPos()
