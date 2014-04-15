@@ -28,7 +28,7 @@
 #include <RGBColorSensorArray/RGBColorSensorArray.h>
 
 #define I2C_BUS_NUMBER 1
-#define DRIVE_SYSTEM_ADDRESS 0x12
+#define DRIVE_SYSTEM_ADDRESS 18
 #define RGB_COLOR_SENSOR_ARRAY_ADDRESS 60
 
 class Explorer

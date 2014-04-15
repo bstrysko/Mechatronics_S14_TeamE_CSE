@@ -24,8 +24,8 @@
 
 #include <stdint.h>
 
-#define DRIVE_SYSTEM_REGISTER_POSITION_WRITE 0x1
-#define DRIVE_SYSTEM_REGISTER_POSITION_READ 0x2
+#define DRIVE_SYSTEM_REGISTER_POSITION 0x10
+#define DRIVE_SYSTEM_REGISTER_ANGLE 0x11
 
 class DriveSystem : I2CDevice
 {
@@ -33,7 +33,9 @@ class DriveSystem : I2CDevice
     DriveSystem(I2CBus* bus, uint8_t address);
     ~DriveSystem();
 
-    void getPosition(float* x, float* y, float* angle);
+    void getPosition(float* x, float* y);
+    float getAngle();
+
     void setPosition(float x, float y);
 };
 

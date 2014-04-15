@@ -26,6 +26,8 @@ Window* w1;
 Camera* camera;
 DriveSystem* driveSystem;
 RGBColorSensorArray* rgbColorSensorArray;
+float x;
+float y;
 
 Project::Project() : Application()
 {
@@ -33,7 +35,7 @@ Project::Project() : Application()
 
 void Project::setup()
 {
-	setDelay(200);
+	setDelay(10);
 
 	Explorer::init();
 
@@ -41,16 +43,19 @@ void Project::setup()
 	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
 	camera = Explorer::getCamera();
 
-	driveSystem->setPosition(100.0, -200.0);
+	x = 0.0;
+	y = 0.0;
+	driveSystem->setPosition(x, y);
 
 	w1 = createWindow("Explorer");
 }
 
 void Project::loop()
 {
-	float x, y, angle;
-	driveSystem->getPosition(&x, &y, &angle);
-	cout << x << ", " << y << " | " << angle << endl;
+	float x2, y2, angle2;
+	driveSystem->getPosition(&x2, &y2);
+	cout << "Actual: " << x2 << ", " << y2 << " | " << angle2 << endl;
+	cout << "Target: " << x << ", " << y << endl << endl;
 
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
@@ -62,7 +67,7 @@ void Project::loop()
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
 	text_frame.printText(Point(20,40), Color::GREEN, 0, t);
 	t.str("");
-	
+/*	
 	vector<RGBColorSensor> data = rgbColorSensorArray->getData();
 
 	for(size_t i = 0; i < data.size(); i++)
@@ -75,14 +80,42 @@ void Project::loop()
 		text_frame.printText(Point(20, 60 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
 		t.str("");
 
-		cout << s << "\t";
+	//	cout << s << "\t";
 	}
 
-	cout << endl;
+	//cout << endl;
+*/
 
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
 
+#define STEP 10.0
+
 void Project::keyPressed(char key)
 {
+	switch(key)
+	{
+		case 'a': //left
+		{
+			x -= STEP;
+			break;
+		}
+		case 'w': //up
+		{
+			y += STEP;
+			break;
+		}
+		case 'd': //right
+		{
+			x += STEP;
+			break;
+		}
+		case 's': //down
+		{
+			y -= STEP;
+			break;
+		}
+	}
+
+	driveSystem->setPosition(x, y);
 }
