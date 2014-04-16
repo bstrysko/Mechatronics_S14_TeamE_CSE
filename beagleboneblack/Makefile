@@ -23,7 +23,6 @@ OBJS =  \
  src/application/application.o \
  src/application/window.o \
  src/camera.o \
- src/drive_system.o \
  src/explorer.o \
  src/frame/rgb_frame.o \
  src/frame/thresh_frame.o \
@@ -34,7 +33,7 @@ OBJS =  \
 DEPFILES = $(patsubst %.o,%.dep,$(OBJS))
 
 CFLAGS = -Iinclude/ -I/usr/include/ $(shell pkg-config --cflags opencv)
-LIBS = -l RGBColorSensorArray -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l CSEComsProtocol $(shell pkg-config --libs opencv)
+LIBS = -l RGBColorSensorArray -l DriveSubsystem -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l CSEComsProtocol $(shell pkg-config --libs opencv)
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET) $(DEPFILES)
 

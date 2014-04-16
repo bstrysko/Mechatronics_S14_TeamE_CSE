@@ -21,26 +21,26 @@
 #define _EXPLORARE_EXPLORER_H_
 
 #include <I2CMaster/I2CBus.h>
+#include <DriveSubsystem/DriveSubsystem.h>
 
-#include "drive_system.h"
 #include "camera.h"
 
 #include <RGBColorSensorArray/RGBColorSensorArray.h>
 
 #define I2C_BUS_NUMBER 1
-#define DRIVE_SYSTEM_ADDRESS 18
+#define DRIVE_SUBSYSTEM_ADDRESS 18
 #define RGB_COLOR_SENSOR_ARRAY_ADDRESS 60
 
 class Explorer
 {
   private:
     static I2CBus* i2cBus;
-    static DriveSystem* driveSystem;
+    static DriveSubsystem* driveSubsystem;
     static RGBColorSensorArray* rgbColorSensorArray;
     static Camera* camera;
   public:
     static void init();
-    static DriveSystem* getDriveSystem();
+    static DriveSubsystem* getDriveSubsystem();
     static RGBColorSensorArray* getRGBColorSensorArray();
     static Camera* getCamera();
 };

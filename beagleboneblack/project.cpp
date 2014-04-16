@@ -25,7 +25,7 @@
 
 Window* w1;
 Camera* camera;
-DriveSystem* driveSystem;
+DriveSubsystem* driveSubsystem;
 RGBColorSensorArray* rgbColorSensorArray;
 CSEComsClient* client;
 
@@ -46,7 +46,7 @@ void Project::setup(string hostname, int port)
 {
 	Explorer::init();
 
-	driveSystem = Explorer::getDriveSystem();
+	driveSubsystem = Explorer::getDriveSubsystem();
 	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
 	camera = Explorer::getCamera();
 
@@ -55,7 +55,7 @@ void Project::setup(string hostname, int port)
 	client = new CSEComsClient(hostname, port);
 
 	float x2, y2;
-	driveSystem->getPosition(&x2, &y2);
+	driveSubsystem->getPosition(&x2, &y2);
 	x = x2 / STEP;
 	y = y2 / STEP;
 	here = false;
@@ -66,7 +66,7 @@ void Project::setup(string hostname, int port)
 void Project::loop()
 {
 	float x2, y2;
-	driveSystem->getPosition(&x2, &y2);
+	driveSubsystem->getPosition(&x2, &y2);
 
 	x2 /= STEP;
 	y2 /= STEP;
@@ -144,6 +144,6 @@ void Project::keyPressed(int key)
 		}
 	}
 
-	driveSystem->setPosition(x * STEP, y * STEP);
+	driveSubsystem->setPosition(x * STEP, y * STEP);
 	here = false;
 }
