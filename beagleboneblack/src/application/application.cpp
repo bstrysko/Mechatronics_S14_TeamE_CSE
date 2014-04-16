@@ -26,15 +26,15 @@ Application::~Application()
 {
 }
 
-void Application::run()
+void Application::run(string hostname, int port)
 {	
-	setup();
+	setup(hostname, port);
 
 	while(true)
 	{
 		loop();
 
-		char key = cvWaitKey(delay);
+		int key = cvWaitKey(delay);
 
 		if(key >= 0)
 		{

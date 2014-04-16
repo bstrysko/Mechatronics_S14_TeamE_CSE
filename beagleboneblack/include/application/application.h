@@ -39,13 +39,13 @@ class Application
 
     Window* createWindow(string name);
 
-    virtual void setup() = 0;
+    virtual void setup(string hostname, int port) = 0;
     virtual void loop() = 0;
-    virtual void keyPressed(char key) = 0;
+    virtual void keyPressed(int key) = 0;
   public:
     ~Application();
 
-    void run();
+    void run(string hostname, int port);
 };
 
 #endif

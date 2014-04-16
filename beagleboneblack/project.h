@@ -36,9 +36,9 @@ using namespace std;
 class Project : public Application
 {
   protected:
-    void setup();
+    void setup(string hostname, int port);
     void loop();
-    void keyPressed(char key);
+    void keyPressed(int key);
   public:
     Project();
 };

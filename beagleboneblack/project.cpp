@@ -19,39 +19,72 @@
  * Created On: 2/2/14
  */
 
-
 #include "project.h"
+
+#include <CSEComsProtocol/CSEComsClient.h>
 
 Window* w1;
 Camera* camera;
 DriveSystem* driveSystem;
 RGBColorSensorArray* rgbColorSensorArray;
-float x;
-float y;
+CSEComsClient* client;
+
+#define STEP 4.0
+
+int x;
+int y;
+bool here;
+
+#define IS_DEFECT(c) (c.getAlpha() > 3000)
 
 Project::Project() : Application()
 {
 }
 
-void Project::setup()
+void Project::setup(string hostname, int port)
 {
-//	setDelay(10);
-
 	Explorer::init();
 
 	driveSystem = Explorer::getDriveSystem();
 	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
 	camera = Explorer::getCamera();
 
-	x = 0.0;
-	y = 0.0;
-	driveSystem->setPosition(x, y);
-
 	w1 = createWindow("Explorer");
+
+	client = new CSEComsClient(hostname, port);
+
+	float x2, y2;
+	driveSystem->getPosition(&x2, &y2);
+	x = x2 / STEP;
+	y = y2 / STEP;
+	here = false;
+	
+	setDelay(500);
 }
 
 void Project::loop()
 {
+	float x2, y2;
+	driveSystem->getPosition(&x2, &y2);
+
+	x2 /= STEP;
+	y2 /= STEP;
+
+	cout << "(" << (int)x << "," << (int)y << ") (" << (int)x2 << ", " << (int)y2 << ")" << endl;
+
+	vector<Color> data = rgbColorSensorArray->getData();
+
+	if(((int)x2 == x) && ((int)y2 == y) && (!here))
+	{
+		here = true;
+		client->detectCell(CSECellCoordinate(x, y), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
+		client->detectCell(CSECellCoordinate(x, y+1), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
+		client->detectCell(CSECellCoordinate(x, y+2), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
+	
+		cout << (*client) << endl;
+		client->flush();
+	}
+
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
 	HSVFrame hsv_frame(rgb_frame);
@@ -59,52 +92,54 @@ void Project::loop()
 	TextFrame text_frame(rgb_frame);
 	
 	ostringstream t;
-    t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
-	text_frame.printText(Point(20,40), Color::GREEN, 0, t);
+    t << "Position: (" << x << ", " << y << ")";
+	text_frame.printText(Point(40,40), Color::GREEN, 0, t);
 	t.str("");
 	
-	vector<Color> data = rgbColorSensorArray->getData();
 
+    t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
+	text_frame.printText(Point(40,60), Color::GREEN, 0, t);
+	t.str("");
+	
 	for(size_t i = 0; i < data.size(); i++)
 	{
 		Color c = data[i];
 
 		ostringstream t;
-		t << ((c.getAlpha() > 3000) ? "DEFECT" : "NON-DEFECT");
-		text_frame.printText(Point(20, 60 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
+		t << (IS_DEFECT(c) ? "DEFECT" : "NON-DEFECT");
+		text_frame.printText(Point(40, 80 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
 		t.str("");
 	}
 
 	w1->renderFrames4(rgb_frame, hsv_frame, thresh_frame, text_frame);
 }
 
-#define STEP 4.0
-
-void Project::keyPressed(char key)
+void Project::keyPressed(int key)
 {
 	switch(key)
 	{
 		case 'a': //left
 		{
-			x -= STEP;
+			x--;
 			break;
 		}
 		case 'w': //up
 		{
-			y += STEP;
+			y++;
 			break;
 		}
 		case 'd': //right
 		{
-			x += STEP;
+			x++;
 			break;
 		}
 		case 's': //down
 		{
-			y -= STEP;
+			y--;
 			break;
 		}
 	}
 
-	driveSystem->setPosition(x, y);
+	driveSystem->setPosition(x * STEP, y * STEP);
+	here = false;
 }
