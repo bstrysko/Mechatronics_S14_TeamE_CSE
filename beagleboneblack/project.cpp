@@ -36,6 +36,7 @@ int y;
 bool here;
 
 #define IS_DEFECT(c) (c.getAlpha() > 3000)
+#define FLOAT_TO_INT(f) ((int)((f > 0) ? (f + 0.2) : (f - 0.2)))
 
 Project::Project() : Application()
 {
@@ -70,11 +71,11 @@ void Project::loop()
 	x2 /= STEP;
 	y2 /= STEP;
 
-	cout << "(" << (int)x << "," << (int)y << ") (" << (int)x2 << ", " << (int)y2 << ")" << endl;
+	cout << "(" << x << "," << y << ") (" << FLOAT_TO_INT(x2) << ", " << FLOAT_TO_INT(y2) << ")" << endl;
 
 	vector<Color> data = rgbColorSensorArray->getData();
 
-	if(((int)x2 == x) && ((int)y2 == y) && (!here))
+	if((FLOAT_TO_INT(x2) == x) && (FLOAT_TO_INT(y2) == y) && (!here))
 	{
 		here = true;
 		client->detectCell(CSECellCoordinate(-y, x), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
@@ -92,13 +93,16 @@ void Project::loop()
 	TextFrame text_frame(rgb_frame);
 	
 	ostringstream t;
-    t << "Position: (" << x << ", " << y << ")";
+    t << "Target Position: (" << x << ", " << y << ")";
 	text_frame.printText(Point(40,40), Color::GREEN, 0, t);
 	t.str("");
 	
-
-    t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
+	t << "Current Position: (" << x2 << ", " << y2 << ")";
 	text_frame.printText(Point(40,60), Color::GREEN, 0, t);
+	t.str("");
+	
+    t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
+	text_frame.printText(Point(40,80), Color::GREEN, 0, t);
 	t.str("");
 	
 	for(size_t i = 0; i < data.size(); i++)
@@ -107,7 +111,7 @@ void Project::loop()
 
 		ostringstream t;
 		t << (IS_DEFECT(c) ? "DEFECT" : "NON-DEFECT");
-		text_frame.printText(Point(40, 80 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
+		text_frame.printText(Point(40, 100 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
 		t.str("");
 	}
 
@@ -125,7 +129,7 @@ void Project::keyPressed(int key)
 		}
 		case 'w': //up
 		{
-			y++;
+			y+= 1;
 			break;
 		}
 		case 'd': //right
@@ -135,7 +139,7 @@ void Project::keyPressed(int key)
 		}
 		case 's': //down
 		{
-			y--;
+			y-= 1;
 			break;
 		}
 	}
