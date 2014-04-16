@@ -52,7 +52,7 @@ void Project::setup(vector<string> argv)
 		exit(1);
 	}
 
-	Explorer::init();
+	Explorer::init(Size(400, 400));
 
 	driveSubsystem = Explorer::getDriveSubsystem();
 	rgbColorSensorArray = Explorer::getRGBColorSensorArray();
@@ -81,8 +81,6 @@ void Project::loop()
 	x2 /= STEP;
 	y2 /= STEP;
 
-	cout << "(" << x << "," << y << ") (" << FLOAT_TO_INT(x2) << ", " << FLOAT_TO_INT(y2) << ")" << endl;
-
 	vector<Color> data = rgbColorSensorArray->getData();
 
 	if((FLOAT_TO_INT(x2) == x) && (FLOAT_TO_INT(y2) == y) && (!here))
@@ -106,22 +104,22 @@ void Project::loop()
     t << "Target Position: (" << x << ", " << y << ")";
 	text_frame.printText(Point(40,40), Scalar(255, 0, 255, 0), t);
 	t.str("");
-/*
+
 	t << "Current Position: (" << x2 << ", " << y2 << ")";
-	text_frame.printText(Point(40,60), Color::GREEN, 0, t);
+	text_frame.printText(Point(40,60), Scalar(255, 0, 255, 0), t);
 	t.str("");
 	
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
-	text_frame.printText(Point(40,80), Color::GREEN, 0, t);
+	text_frame.printText(Point(40,80), Scalar(255, 0, 255, 0), t);
 	t.str("");
-*/	
+
 	for(size_t i = 0; i < data.size(); i++)
 	{
 		Color c = data[i];
 
 		ostringstream t;
 		t << (IS_DEFECT(c) ? "DEFECT" : "NON-DEFECT");
-//		text_frame.printText(Point(40, 100 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
+		text_frame.printText(Point(40, 100 + 20*i), Scalar(255, c.getBlue(), c.getGreen(), c.getRed()), t);
 		t.str("");
 	}
 

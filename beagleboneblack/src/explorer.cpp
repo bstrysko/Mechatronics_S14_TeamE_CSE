@@ -22,7 +22,7 @@ DriveSubsystem* Explorer::driveSubsystem = 0;
 RGBColorSensorArray* Explorer::rgbColorSensorArray = 0;
 Camera* Explorer::camera = 0;
 
-void Explorer::init()
+void Explorer::init(Size cameraSize)
 {
 	i2cBus = new I2CBus(I2C_BUS_NUMBER);
 
@@ -35,7 +35,7 @@ void Explorer::init()
 	rgbColorSensorArray->setLED2State(s);
 	rgbColorSensorArray->enable();
 
-	camera = new Camera();
+	camera = new Camera(cameraSize);
 }
 
 DriveSubsystem* Explorer::getDriveSubsystem()
