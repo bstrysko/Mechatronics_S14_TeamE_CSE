@@ -29,6 +29,8 @@ DriveSubsystem* driveSubsystem;
 RGBColorSensorArray* rgbColorSensorArray;
 CSEComsClient* client;
 
+void usage(string name);
+
 #define STEP 4.0
 
 int x;
@@ -42,8 +44,14 @@ Project::Project() : Application()
 {
 }
 
-void Project::setup(string hostname, int port)
+void Project::setup(vector<string> argv)
 {
+	if(argv.size() < 3)
+	{
+		usage(argv[0]);
+		exit(1);
+	}
+
 	Explorer::init();
 
 	driveSubsystem = Explorer::getDriveSubsystem();
@@ -52,6 +60,8 @@ void Project::setup(string hostname, int port)
 
 	w1 = createWindow("Explorer");
 
+	string hostname = argv[1];
+	int port = stringToInt(argv[2]);
 	client = new CSEComsClient(hostname, port);
 
 	float x2, y2;
@@ -94,9 +104,9 @@ void Project::loop()
 	
 	ostringstream t;
     t << "Target Position: (" << x << ", " << y << ")";
-	text_frame.printText(Point(40,40), Color::GREEN, 0, t);
+	text_frame.printText(Point(40,40), Scalar(255, 0, 255, 0), t);
 	t.str("");
-	
+/*
 	t << "Current Position: (" << x2 << ", " << y2 << ")";
 	text_frame.printText(Point(40,60), Color::GREEN, 0, t);
 	t.str("");
@@ -104,14 +114,14 @@ void Project::loop()
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
 	text_frame.printText(Point(40,80), Color::GREEN, 0, t);
 	t.str("");
-	
+*/	
 	for(size_t i = 0; i < data.size(); i++)
 	{
 		Color c = data[i];
 
 		ostringstream t;
 		t << (IS_DEFECT(c) ? "DEFECT" : "NON-DEFECT");
-		text_frame.printText(Point(40, 100 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
+//		text_frame.printText(Point(40, 100 + 20*i), Color(c.getBlue(), c.getGreen(), c.getRed()), 0, t);
 		t.str("");
 	}
 
@@ -146,4 +156,9 @@ void Project::keyPressed(int key)
 
 	driveSubsystem->setPosition(x * STEP, y * STEP);
 	here = false;
+}
+
+void usage(string name)
+{
+    cout << "usage: ./" << name << " [hostname] [port]" << endl;
 }

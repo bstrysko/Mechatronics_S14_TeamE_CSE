@@ -22,8 +22,7 @@
 
 #include <I2CMaster/I2CBus.h>
 #include <DriveSubsystem/DriveSubsystem.h>
-
-#include "camera.h"
+#include <VisualCSEDefectDetector/Camera.h>
 
 #include <RGBColorSensorArray/RGBColorSensorArray.h>
 

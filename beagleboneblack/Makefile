@@ -20,20 +20,12 @@ LINK_TARGET = main
 OBJS =  \
  project.o \
  src/main.o \
- src/application/application.o \
- src/application/window.o \
- src/camera.o \
- src/explorer.o \
- src/frame/rgb_frame.o \
- src/frame/thresh_frame.o \
- src/frame/frame.o \
- src/frame/hsv_frame.o \
- src/frame/text_frame.o
+ src/explorer.o
 
 DEPFILES = $(patsubst %.o,%.dep,$(OBJS))
 
 CFLAGS = -Iinclude/ -I/usr/include/ $(shell pkg-config --cflags opencv)
-LIBS = -l RGBColorSensorArray -l DriveSubsystem -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l CSEComsProtocol $(shell pkg-config --libs opencv)
+LIBS = -l VisualCSEDefectDetector $(shell pkg-config --libs opencv) -l VisualCSEDefectDetector -l RGBColorSensorArray -l DriveSubsystem -l I2CMaster -l AVRI2CBootloader -l IntelHexParser -l CSEComsProtocol
 
 REBUILDABLES = $(OBJS) $(LINK_TARGET) $(DEPFILES)
 
