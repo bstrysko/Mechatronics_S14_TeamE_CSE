@@ -37,8 +37,11 @@ class Explorer
     static DriveSubsystem* driveSubsystem;
     static RGBColorSensorArray* rgbColorSensorArray;
     static Camera* camera;
+    static void initEarly();
   public:
+    static void init();
     static void init(Size size);
+    ~Explorer();
     static DriveSubsystem* getDriveSubsystem();
     static RGBColorSensorArray* getRGBColorSensorArray();
     static Camera* getCamera();

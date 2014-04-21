@@ -21,24 +21,24 @@
 
 #include "project.h"
 
-#include <CSEComsProtocol/CSEComsClient.h>
+#include <CSEComsProtocol/CSEComs.h>
 
 Window* w1;
 Camera* camera;
 DriveSubsystem* driveSubsystem;
 RGBColorSensorArray* rgbColorSensorArray;
-CSEComsClient* client;
+CSEComs* coms;
 
 void usage(string name);
 
-#define STEP 4.0
-
-int x;
-int y;
+CSECellCoordinate coordinates;
 bool here;
+bool scanned;
+bool started;
 
 #define IS_DEFECT(c) (c.getAlpha() > 3000)
-#define FLOAT_TO_INT(f) ((int)((f > 0) ? (f + 0.2) : (f - 0.2)))
+
+CSECellCoordinate getNextCoordinates(CSECellCoordinate currentCoordinates);
 
 Project::Project() : Application()
 {
@@ -46,7 +46,7 @@ Project::Project() : Application()
 
 void Project::setup(vector<string> argv)
 {
-	if(argv.size() < 3)
+	if(argv.size() < 2)
 	{
 		usage(argv[0]);
 		exit(1);
@@ -61,37 +61,37 @@ void Project::setup(vector<string> argv)
 	w1 = createWindow("Explorer");
 
 	string hostname = argv[1];
-	int port = stringToInt(argv[2]);
-	client = new CSEComsClient(hostname, port);
+	coms = new CSEComs(hostname);
 
-	float x2, y2;
-	driveSubsystem->getPosition(&x2, &y2);
-	x = x2 / STEP;
-	y = y2 / STEP;
 	here = false;
+	scanned = false;
+	started = false;
 	
 	setDelay(500);
 }
 
 void Project::loop()
 {
-	float x2, y2;
-	driveSubsystem->getPosition(&x2, &y2);
-
-	x2 /= STEP;
-	y2 /= STEP;
+	here = driveSubsystem->hasArrived();
 
 	vector<Color> data = rgbColorSensorArray->getData();
 
-	if((FLOAT_TO_INT(x2) == x) && (FLOAT_TO_INT(y2) == y) && (!here))
+	if(coms->isStarted() && !started)
 	{
-		here = true;
-		client->detectCell(CSECellCoordinate(-y, x), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
-		client->detectCell(CSECellCoordinate((-y+1), x), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
-		client->detectCell(CSECellCoordinate((-y+2), x), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
-	
-		cout << (*client) << endl;
-		client->flush();
+		coms->flush();
+		started = true;
+	}
+
+	if(here && !scanned)
+	{
+		here = false;
+//		coms->detectCell(CSECellCoordinate(-y, x), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
+//		coms->detectCell(CSECellCoordinate((-y+1), x), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
+//		coms->detectCell(CSECellCoordinate((-y+2), x), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
+		scanned = true;	
+
+		cout << (*coms) << endl;
+		coms->flush();
 	}
 
 	RGBFrame rgb_frame = camera->getRGBFrame();
@@ -101,11 +101,11 @@ void Project::loop()
 	TextFrame text_frame(rgb_frame);
 	
 	ostringstream t;
-    t << "Target Position: (" << x << ", " << y << ")";
-	text_frame.printText(Point(40,40), Scalar(255, 0, 255, 0), t);
+    t << "Started: " << (coms->isStarted() ? "true" : "false");
+	text_frame.printText(Point(40,20), Scalar(255, 0, 255, 0), t);
 	t.str("");
 
-	t << "Current Position: (" << x2 << ", " << y2 << ")";
+ 	t << "Here: " << (here ? "true" : "false");
 	text_frame.printText(Point(40,60), Scalar(255, 0, 255, 0), t);
 	t.str("");
 	
@@ -128,35 +128,57 @@ void Project::loop()
 
 void Project::keyPressed(int key)
 {
-	switch(key)
-	{
-		case 'a': //left
-		{
-			x--;
-			break;
-		}
-		case 'w': //up
-		{
-			y+= 1;
-			break;
-		}
-		case 'd': //right
-		{
-			x++;
-			break;
-		}
-		case 's': //down
-		{
-			y-= 1;
-			break;
-		}
-	}
-
-	driveSubsystem->setPosition(x * STEP, y * STEP);
-	here = false;
 }
 
 void usage(string name)
 {
-    cout << "usage: ./" << name << " [hostname] [port]" << endl;
+    cout << "usage: ./" << name << " [hostname]" << endl;
 }
+
+CSECellCoordinate getNextCoordinates(CSECellCoordinate currentCoordinates)
+{
+	uint8_t x = currentCoordinates.first;
+	uint8_t y = currentCoordinates.second;
+
+	switch(y)
+	{
+		case 0:
+		{
+			if(x == 8)
+			{
+				return CSECellCoordinate(8, 1);
+			}
+			else
+			{
+				return CSECellCoordinate(x+1, 0);
+			}
+		}
+		case 1:
+		{
+			if(x == 0)
+			{
+				return CSECellCoordinate(0, 2);
+			}
+			else
+			{
+				return CSECellCoordinate(x-1, 1);
+			}
+		}
+		case 2:
+		{
+			if(x == 8)
+			{
+				return CSECellCoordinate(9, 9);
+			}
+			else
+			{
+				return CSECellCoordinate(x+1, 2);
+			}
+		}
+		default:
+		{
+			return CSECellCoordinate(-1, -1);
+		}
+	}
+}
+
