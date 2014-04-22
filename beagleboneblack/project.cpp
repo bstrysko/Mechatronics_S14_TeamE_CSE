@@ -29,16 +29,25 @@ DriveSubsystem* driveSubsystem;
 RGBColorSensorArray* rgbColorSensorArray;
 CSEComs* coms;
 
+uint8_t indexToXMap[] = 
+	{
+		0xFF,
+		0, 1, 2, 3, 4, 5, 6, 7, 8,
+		8, 7, 6, 5, 4, 3, 2, 1, 0,
+		0, 1, 2, 3, 4, 5, 6, 7, 8
+	};
+
+uint8_t indexToYMap[] = 
+	{
+		0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0,
+		3, 3, 3, 3, 3, 3, 3, 3, 3,
+		6, 6, 6, 6, 6, 6, 6, 6, 6
+	};
+
 void usage(string name);
 
-CSECellCoordinate coordinates;
-bool here;
-bool scanned;
-bool started;
-
-#define IS_DEFECT(c) (c.getAlpha() > 3000)
-
-CSECellCoordinate getNextCoordinates(CSECellCoordinate currentCoordinates);
+#define IS_DEFECT(c) (c.getAlpha() > 2000)
 
 Project::Project() : Application()
 {
@@ -63,41 +72,47 @@ void Project::setup(vector<string> argv)
 	string hostname = argv[1];
 	coms = new CSEComs(hostname);
 
-	here = false;
-	scanned = false;
-	started = false;
-	
 	setDelay(500);
 }
 
 void Project::loop()
 {
-	here = driveSubsystem->hasArrived();
-
 	vector<Color> data = rgbColorSensorArray->getData();
 
-	if(coms->isStarted() && !started)
+	if(coms->isStarted())
 	{
-		coms->flush();
-		started = true;
-	}
+		bool arrived = driveSubsystem->hasArrived();
 
-	if(here && !scanned)
-	{
-		here = false;
-//		coms->detectCell(CSECellCoordinate(-y, x), IS_DEFECT(data[0]) ? DEFECT : NON_DEFECT);
-//		coms->detectCell(CSECellCoordinate((-y+1), x), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
-//		coms->detectCell(CSECellCoordinate((-y+2), x), IS_DEFECT(data[2]) ? DEFECT : NON_DEFECT);
-		scanned = true;	
+		if(arrived)
+		{
+			uint8_t positionIndex = driveSubsystem->getPositionIndex();
 
-		cout << (*coms) << endl;
-		coms->flush();
+			if(positionIndex == 0)
+			{
+				driveSubsystem->moveNextPositionIndex();
+			}
+			else if(positionIndex != 28)
+			{
+				uint8_t x = indexToXMap[positionIndex];
+				uint8_t y = indexToYMap[positionIndex];
+
+				bool r = (y == 0) || (y == 6);
+
+				coms->detectCell(CSECellCoordinate(y, x), IS_DEFECT(data[r ? 2 : 0]) ? DEFECT : NON_DEFECT);
+				coms->detectCell(CSECellCoordinate((y+1), x), IS_DEFECT(data[1]) ? DEFECT : NON_DEFECT);
+				coms->detectCell(CSECellCoordinate((y+2), x), IS_DEFECT(data[r ? 0 : 2]) ? DEFECT : NON_DEFECT);
+				cout << (*coms) << endl;
+				coms->flush();
+
+				driveSubsystem->moveNextPositionIndex();
+			}
+		}
 	}
 
 	RGBFrame rgb_frame = camera->getRGBFrame();
 	
 	HSVFrame hsv_frame(rgb_frame);
-	ThreshFrame thresh_frame(hsv_frame, Scalar(160, 0, 0), Scalar(255, 255, 255));
+	ThreshFrame thresh_frame(hsv_frame, Scalar(20, 100, 100), Scalar(30, 255, 255));
 	TextFrame text_frame(rgb_frame);
 	
 	ostringstream t;
@@ -105,6 +120,7 @@ void Project::loop()
 	text_frame.printText(Point(40,20), Scalar(255, 0, 255, 0), t);
 	t.str("");
 
+/*
  	t << "Here: " << (here ? "true" : "false");
 	text_frame.printText(Point(40,60), Scalar(255, 0, 255, 0), t);
 	t.str("");
@@ -112,7 +128,7 @@ void Project::loop()
     t << "State: " << ((countNonZero(thresh_frame.getSingleChannelMat()) > 10000) ? "defect" : "okay");
 	text_frame.printText(Point(40,80), Scalar(255, 0, 255, 0), t);
 	t.str("");
-
+*/
 	for(size_t i = 0; i < data.size(); i++)
 	{
 		Color c = data[i];
@@ -134,51 +150,3 @@ void usage(string name)
 {
     cout << "usage: ./" << name << " [hostname]" << endl;
 }
-
-CSECellCoordinate getNextCoordinates(CSECellCoordinate currentCoordinates)
-{
-	uint8_t x = currentCoordinates.first;
-	uint8_t y = currentCoordinates.second;
-
-	switch(y)
-	{
-		case 0:
-		{
-			if(x == 8)
-			{
-				return CSECellCoordinate(8, 1);
-			}
-			else
-			{
-				return CSECellCoordinate(x+1, 0);
-			}
-		}
-		case 1:
-		{
-			if(x == 0)
-			{
-				return CSECellCoordinate(0, 2);
-			}
-			else
-			{
-				return CSECellCoordinate(x-1, 1);
-			}
-		}
-		case 2:
-		{
-			if(x == 8)
-			{
-				return CSECellCoordinate(9, 9);
-			}
-			else
-			{
-				return CSECellCoordinate(x+1, 2);
-			}
-		}
-		default:
-		{
-			return CSECellCoordinate(-1, -1);
-		}
-	}
-}
-
